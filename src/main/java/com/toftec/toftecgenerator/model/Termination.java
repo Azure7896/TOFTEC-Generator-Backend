@@ -18,5 +18,6 @@ public class Termination {
     private String companyName;
     private String companyAddress;
     private String companyCityWithPostalCode;
+    private String date;
 
 }
