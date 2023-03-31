@@ -19,18 +19,17 @@ public class TerminationController {
     }
 
     @PostMapping("/generate")
-    public void generateTermination(@RequestBody Termination termination){
+    public ResponseEntity<Resource> generateTermination(@RequestBody Termination termination) {
+
+        System.out.println(termination.toString());
+
         try {
             terminationPdfService.createTermination(termination);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
 
-
-    @GetMapping("/generate/{fileName}")
-    public ResponseEntity<Resource> downloadTermination(@PathVariable String fileName) {
-        FileSystemResource resource = new FileSystemResource("c:/orion/" + fileName);
+        FileSystemResource resource = new FileSystemResource("c:/orion/Wypowiedzenie" + termination.getFirstName() + termination.getLastName() + ".pdf");
         MediaType mediaType = MediaTypeFactory
                 .getMediaType(resource)
                 .orElse(MediaType.APPLICATION_OCTET_STREAM);
