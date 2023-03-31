@@ -20,10 +20,10 @@ import java.io.IOException;
 @Service
 public class TerminationPdfService {
 
-    private final WordConverter wordConverter;
+    private final WordConverterService wordConverterService;
 
-    public TerminationPdfService(WordConverter wordConverter) {
-        this.wordConverter = wordConverter;
+    public TerminationPdfService(WordConverterService wordConverterService) {
+        this.wordConverterService = wordConverterService;
     }
 
     public String createTermination(Termination termination) throws IOException {
@@ -42,7 +42,7 @@ public class TerminationPdfService {
         pdfDocument.setDefaultPageSize(PageSize.A4);
 
 
-        Paragraph date = new Paragraph(wordConverter.deletePostalCode(termination.getCompanyCityWithPostalCode()) + ", dnia " + termination.getDate());
+        Paragraph date = new Paragraph(wordConverterService.deletePostalCode(termination.getCompanyCityWithPostalCode()) + ", dnia " + termination.getDate());
 
         date.setFixedPosition(310, 805, 200).setFontSize(12f).setTextAlignment(TextAlignment.RIGHT).setFont(font);
 
@@ -57,8 +57,8 @@ public class TerminationPdfService {
         title.setFontSize(15f).setBold().setMarginTop(195f).setTextAlignment(TextAlignment.CENTER).setFont(font);
 
         Paragraph terminationBody = new Paragraph("Niniejszym wypowiadam umowę o pracę zawartą dnia 08.04.2022 pomiedzy " + termination.getCompanyName() + " a " +
-                wordConverter.convertFirstName(termination.getFirstName()) + " z zachowaniem okresu wypowiedzenia wynoszacego jeden miesiac.");
-        terminationBody.setFontSize(12f).setTextAlignment(TextAlignment.LEFT).setFont(font);
+                wordConverterService.convertFirstName(termination.getFirstName()) + " z zachowaniem okresu wypowiedzenia wynoszacego jeden miesiac.");
+        terminationBody.setFontSize(11f).setTextAlignment(TextAlignment.LEFT).setFont(font);
 
         document.add(date);
         document.add(userData);
