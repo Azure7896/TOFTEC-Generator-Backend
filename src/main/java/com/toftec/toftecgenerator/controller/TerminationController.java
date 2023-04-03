@@ -1,5 +1,4 @@
 package com.toftec.toftecgenerator.controller;
-
 import com.toftec.toftecgenerator.model.Termination;
 import com.toftec.toftecgenerator.service.FileService;
 import com.toftec.toftecgenerator.service.TerminationPdfService;
@@ -9,16 +8,17 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Random;
+
+
+
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://toftecgeneratorfrontend.s3-website.eu-north-1.amazonaws.com/")
 public class TerminationController {
 
     private final TerminationPdfService terminationPdfService;
 
     private final FileService fileService;
-
     public TerminationController(TerminationPdfService terminationPdfService, FileService fileService) {
         this.terminationPdfService = terminationPdfService;
         this.fileService = fileService;
@@ -49,6 +49,11 @@ public class TerminationController {
         headers.setContentDisposition(disposition);
         fileService.deleteFileAfterPdfGeneration(filePath);
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "hehe";
     }
 }
 
