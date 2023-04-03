@@ -6,16 +6,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class WordConverterService {
 
-    public String convertFirstName(String firstName) {
-        String firstNameLastChar = (firstName.substring(firstName.length() - 1));
-        if (firstNameLastChar.equals("a")) {
-            firstName = firstName.substring(0, firstName.length() - 1) + "ą";
-        }
-        return firstName;
-    }
-
-    public String deletePostalCode(String cityWithPostalCode) {
+   public String deletePostalCode(String cityWithPostalCode) {
         return cityWithPostalCode.replaceAll("[0-9-,]", "");
     }
 
+    public String convertDate(String date) throws ParseException {
+        date = date.substring(0, 10);
+        DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat targetFormat = new SimpleDateFormat("dd.MM.yyyy");
+        Date dateResult = originalFormat.parse(date);
+        return targetFormat.format(dateResult);
+    }
 }
