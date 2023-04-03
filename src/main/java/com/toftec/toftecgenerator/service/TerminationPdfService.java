@@ -32,11 +32,14 @@ public class TerminationPdfService {
 
         Random randomNumber = new Random();
 
-        String filePath = "C:\\orion\\Wypowiedzenie" + termination.getFirstName() + termination.getLastName() + randomNumber.nextInt(10000000) + ".pdf";
+        String filePath = termination.getFirstName() + termination.getLastName() + randomNumber.nextInt(10000000) + ".pdf";
 
         PdfWriter pdfWriter = new PdfWriter(filePath);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         Document document = new Document(pdfDocument);
+
+
+
 
         FontProgram fontProgram = FontProgramFactory.createFont("ArialUnicodeMS.ttf");
         PdfFont font = PdfFontFactory.createFont(fontProgram, PdfEncodings.CP1257);
