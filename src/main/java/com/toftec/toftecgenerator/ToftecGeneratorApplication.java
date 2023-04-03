@@ -2,12 +2,21 @@ package com.toftec.toftecgenerator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-public class ToftecGeneratorApplication {
+@EnableAsync
+public class ToftecGeneratorApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(ToftecGeneratorApplication.class, args);
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(ToftecGeneratorApplication.class);
     }
 
 }

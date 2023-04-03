@@ -15,6 +15,8 @@ import com.toftec.toftecgenerator.model.Termination;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Random;
 
 
 @Service
@@ -26,14 +28,18 @@ public class TerminationPdfService {
         this.wordConverterService = wordConverterService;
     }
 
-    public String createTermination(Termination termination) throws IOException {
+    public String createTermination(Termination termination) throws IOException, ParseException {
 
+        Random randomNumber = new Random();
 
-        String filePath = "C:\\orion\\Wypowiedzenie" + termination.getFirstName() + termination.getLastName() + ".pdf";
+        String filePath = termination.getFirstName() + termination.getLastName() + randomNumber.nextInt(10000000) + ".pdf";
 
         PdfWriter pdfWriter = new PdfWriter(filePath);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         Document document = new Document(pdfDocument);
+
+
+
 
         FontProgram fontProgram = FontProgramFactory.createFont("ArialUnicodeMS.ttf");
         PdfFont font = PdfFontFactory.createFont(fontProgram, PdfEncodings.CP1257);
@@ -42,31 +48,53 @@ public class TerminationPdfService {
         pdfDocument.setDefaultPageSize(PageSize.A4);
 
 
-        Paragraph date = new Paragraph(wordConverterService.deletePostalCode(termination.getCompanyCityWithPostalCode()) + ", dnia " + termination.getDate());
+        Paragraph date = new Paragraph(wordConverterService.deletePostalCode(termination.getCompanyCityWithPostalCode()) + ", dnia " + wordConverterService.convertDate(termination.getTerminationDocumentDate()));
 
-        date.setFixedPosition(310, 805, 200).setFontSize(12f).setTextAlignment(TextAlignment.RIGHT).setFont(font);
+        date.setFixedPosition(310, 805, 200).setFontSize(11f).setTextAlignment(TextAlignment.RIGHT).setFont(font);
 
         Paragraph userData = new Paragraph(termination.getFirstName() + " " + termination.getLastName() + "\n" + termination.getAddress() + "\n" + termination.getCityWithPostalCode());
-        userData.setFixedPosition(50, 730, 200).setFontSize(12f).setTextAlignment(TextAlignment.LEFT).setFont(font);
+        userData.setFixedPosition(50, 730, 200).setFontSize(11f).setTextAlignment(TextAlignment.LEFT).setFont(font);
 
         Paragraph companyData = new Paragraph(termination.getCompanyName() + "\n" + termination.getCompanyAddress() + "\n"
                 + termination.getCompanyCityWithPostalCode());
-        companyData.setFixedPosition(350, 625, 200).setFontSize(12f).setTextAlignment(TextAlignment.RIGHT).setFont(font);
+        companyData.setFixedPosition(350, 625, 200).setFontSize(11f).setTextAlignment(TextAlignment.RIGHT).setFont(font);
 
         Paragraph title = new Paragraph("Wypowiedzenie umowy o pracę");
         title.setFontSize(15f).setBold().setMarginTop(195f).setTextAlignment(TextAlignment.CENTER).setFont(font);
 
-        Paragraph terminationBody = new Paragraph("Niniejszym wypowiadam umowę o pracę zawartą dnia 08.04.2022 pomiedzy " + termination.getCompanyName() + " a " +
-                wordConverterService.convertFirstName(termination.getFirstName()) + " z zachowaniem okresu wypowiedzenia wynoszacego jeden miesiac.");
+        String terminationPeriod = null;
+
+        if (termination.getTerminationPeriod().equals("twoWeeks")) {
+            terminationPeriod = "dwa tygodnie.";
+        } else if (termination.getTerminationPeriod().equals("oneMonth")) {
+            terminationPeriod = "jeden miesiąc.";
+        } else if (termination.getTerminationPeriod().equals("threeMonths")) {
+            terminationPeriod = "trzy miesiące.";
+        }
+
+        Paragraph terminationBody = new Paragraph("Niniejszym wypowiadam umowę o pracę zawartą dnia " + wordConverterService.convertDate(termination.getEmploymentContractDate()) +
+                " pomiedzy " + termination.getCompanyName() + " a " + termination.getInstrumentalCaseFirstName() + " " + termination.getInstrumentalCaseLastName() +
+                " z zachowaniem okresu wypowiedzenia wynoszącego " + terminationPeriod);
+
         terminationBody.setFontSize(11f).setTextAlignment(TextAlignment.LEFT).setFont(font);
+
+        Paragraph companySignature = new Paragraph("Potwierdzam odebranie wypowiedzenia\n" + "...................................\n" + "(podpis pracodawcy lub osoby upoważnionej)");
+        companySignature.setFontSize(11f).setFixedPosition(50, 330, 200).setTextAlignment(TextAlignment.CENTER).setFont(font);
+
+        Paragraph employeeSignature = new Paragraph("Z poważaniem,\n" + "...................................\n" + "Podpis pracownika" );
+        employeeSignature.setFontSize(11f).setFixedPosition(350, 430, 200).setTextAlignment(TextAlignment.CENTER).setFont(font);
+
 
         document.add(date);
         document.add(userData);
         document.add(companyData);
         document.add(title);
         document.add(terminationBody);
+        document.add(employeeSignature);
+        document.add(companySignature);
 
         document.close();
+
         return filePath;
     }
 }

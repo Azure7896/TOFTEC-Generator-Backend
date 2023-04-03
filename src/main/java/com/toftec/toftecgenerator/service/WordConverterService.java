@@ -2,11 +2,18 @@ package com.toftec.toftecgenerator.service;
 
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
 
 @Service
 public class WordConverterService {
 
    public String deletePostalCode(String cityWithPostalCode) {
+
         return cityWithPostalCode.replaceAll("[0-9-,]", "");
     }
 
