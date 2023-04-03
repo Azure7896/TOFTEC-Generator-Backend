@@ -13,7 +13,7 @@ User applications:
   - IntelliJ IDEA
   - Postman
   
-Application is deployment on AWS Beanstalk with Tomcat.
+Application is deployed on AWS Beanstalk with Tomcat.
 
 ![image](https://user-images.githubusercontent.com/95986791/229386117-36caee25-f4af-48ff-8551-45d565f34437.png)
 
