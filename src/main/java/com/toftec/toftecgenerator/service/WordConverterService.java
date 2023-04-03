@@ -12,7 +12,8 @@ import java.util.Date;
 @Service
 public class WordConverterService {
 
-    public String deletePostalCode(String cityWithPostalCode) {
+   public String deletePostalCode(String cityWithPostalCode) {
+
         return cityWithPostalCode.replaceAll("[0-9-,]", "");
     }
 
@@ -23,5 +24,4 @@ public class WordConverterService {
         Date dateResult = originalFormat.parse(date);
         return targetFormat.format(dateResult);
     }
-
 }
