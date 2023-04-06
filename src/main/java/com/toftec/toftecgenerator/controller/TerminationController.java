@@ -50,10 +50,5 @@ public class TerminationController {
         fileService.deleteFileAfterPdfGeneration(filePath);
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
-
-    @GetMapping("/test")
-    public String test() {
-        return "hehe";
-    }
 }
 
